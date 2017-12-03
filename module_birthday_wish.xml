@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_birthday_wish" default="compile.module.birthday_wish">
+  <dirname property="module.birthday_wish.basedir" file="${ant.file.module_birthday_wish}"/>
+  
+  <property name="module.jdk.home.birthday_wish" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.birthday_wish" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.birthday_wish" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.birthday_wish" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="birthday_wish.output.dir" value="${module.birthday_wish.basedir}/out/production/Birthday Wish"/>
+  <property name="birthday_wish.testoutput.dir" value="${module.birthday_wish.basedir}/out/test/Birthday Wish"/>
+  
+  <path id="birthday_wish.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="birthday_wish.module.production.classpath">
+    <path refid="${module.jdk.classpath.birthday_wish}"/>
+  </path>
+  
+  <path id="birthday_wish.runtime.production.module.classpath">
+    <pathelement location="${birthday_wish.output.dir}"/>
+  </path>
+  
+  <path id="birthday_wish.module.classpath">
+    <path refid="${module.jdk.classpath.birthday_wish}"/>
+    <pathelement location="${birthday_wish.output.dir}"/>
+  </path>
+  
+  <path id="birthday_wish.runtime.module.classpath">
+    <pathelement location="${birthday_wish.testoutput.dir}"/>
+    <pathelement location="${birthday_wish.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.birthday_wish">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.birthday_wish">
+    <patternset refid="excluded.from.module.birthday_wish"/>
+  </patternset>
+  
+  <path id="birthday_wish.module.sourcepath">
+    <dirset dir="${module.birthday_wish.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.birthday_wish" depends="compile.module.birthday_wish.production,compile.module.birthday_wish.tests" description="Compile module Birthday Wish"/>
+  
+  <target name="compile.module.birthday_wish.production" depends="register.custom.compilers" description="Compile module Birthday Wish; production classes">
+    <mkdir dir="${birthday_wish.output.dir}"/>
+    <javac2 destdir="${birthday_wish.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.birthday_wish}/javac">
+      <compilerarg line="${compiler.args.birthday_wish}"/>
+      <bootclasspath refid="birthday_wish.module.bootclasspath"/>
+      <classpath refid="birthday_wish.module.production.classpath"/>
+      <src refid="birthday_wish.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.birthday_wish"/>
+    </javac2>
+    
+    <copy todir="${birthday_wish.output.dir}">
+      <fileset dir="${module.birthday_wish.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.birthday_wish.tests" depends="register.custom.compilers,compile.module.birthday_wish.production" description="compile module Birthday Wish; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.birthday_wish" description="cleanup module">
+    <delete dir="${birthday_wish.output.dir}"/>
+    <delete dir="${birthday_wish.testoutput.dir}"/>
+  </target>
+</project>
